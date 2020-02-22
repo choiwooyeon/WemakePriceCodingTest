@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title> 위메이크프라이스 코딩테스트 </title>
+    <meta charset="UTF-8">
+    
+    <script type="text/javascript" src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
+    <script type="text/javascript">
+	    $("#groupCount").on("keyup", function () {
+	        $(this).val($(this).val().replace(/[^0-9]/gi, ""));
+	    })
+	
+	    function scrap() {
+	        let url = $("#url").val();
+	        if (url == '') {
+	            alert('url을 입력해 주세요.');
+	            return;
+	        }
+	
+	        let characterType = $("#characterType").val();
+	
+	        let groupCount = $("#groupCount").val();
+	        if (groupCount == '' || groupCount <= 0) {
+	            alert('출력 묶음 단위는 1이상의 자연수를 입력 해 주세요.');
+	            return;
+	        }
+	        
+	        let parameters = '?url=' + url + '&characterType=' + characterType + '&groupCount=' + groupCount;
+	
+	        $.ajax({
+	            type: 'get',
+	            dataType: 'json',
+	            contentType: 'application/json',
+	            url: '/api/scrap' + parameters,
+	            success: function (result) {
+					$("#quotient").html(result.quotient);
+					$("#remainder").html(result.remainder);
+	            },
+	            error: function (request, status, error) {
+	                alert("오류 발생 :" + request.responseText);
+	            }
+	        });
+	    }
+	</script>
+</head>
+
+<body>
+	<table>
+		<tr>
+			<td>URL</td>
+			<td><input id="url" type="text" value="http://www.google.co.kr"/></td>
+		<tr>
+		<tr>
+			<td>TYPE</td>
+			<td>
+				<select id="characterType">
+			        <option value="HTML">HTML</option>
+			        <option value="TEXT">Text</option>
+			    </select>
+			</td>
+		<tr>
+		<tr>
+			<td>출력묶음 단위</td>
+			<td><input id="groupCount" type="text" value="100"></td>
+		<tr>
+		<tr>
+			<td rowspan=2><button type="button" onclick="scrap();">출력</button></td>
+		<tr>
+		<tr>
+			<td>몫</td>
+			<td><textarea id="quotient" style='width:100%;height:100%'></textarea></td>
+		<tr>
+		<tr>
+			<td>나머지</td>
+			<td><textarea id="remainder" style='width:100%;height:100%'></textarea></td>
+		<tr>
+	</table>
+</body>
+</html>
