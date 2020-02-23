@@ -13,9 +13,16 @@ public class CharacterSortTest {
 	}
 	
 	@Test
+	public void alphabet() {
+		CharacterSort characterSort = new CharacterSort("123가나다ABC");
+		assertEquals("ABC", characterSort.getAlphabet());
+	}
+	
+	@Test
 	public void sortedNumberAndAlphabet() {
 		CharacterSort characterSort = new CharacterSort("1가나4다C4Aadi12l3io87sdflk~!@#$9");
 		assertEquals("112344789", characterSort.getNumber());  // 144123879
-		assertEquals("AaCddfiikllos", characterSort.getAlpahpet());  // CAadiliosdflk --> AaCddfiikllos
+		assertEquals("AaCddfiikllos", characterSort.getAlphabet());  // CAadiliosdflk --> AaCddfiikllos
 	}
+	
 }

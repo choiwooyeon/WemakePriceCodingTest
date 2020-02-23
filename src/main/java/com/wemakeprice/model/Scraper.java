@@ -6,8 +6,18 @@ import java.util.regex.Pattern;
 
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
+/**
+ * HTTP 응답결과 긁어오는 클래스
+ * 
+ * @author wooyeon.choi
+ * @since 2020.02.23
+ *
+ */
 public class Scraper {
+	Logger logger = LoggerFactory.getLogger(Scraper.class);
 	
 	private String character;
 	
@@ -15,33 +25,42 @@ public class Scraper {
 		return this.character;
 	}
 	
+	public Scraper() {
+		
+	}
+	
 	public Scraper(final String url, final CharacterType characterType) {
 		validUrl(url);
 		
-		String scrapedCharacter = this.scrap(url);
+		String scrapedCharacter = scrap(url);
 		this.character = scrapedCharacter;
 		
-		if(CharacterType.TEXT == characterType) {
+		
+		if(CharacterType.NOTHTML == characterType) {
 			this.character = scrapedCharacter.replaceAll("<[^>]*>", "").replaceAll("\\s", "");
 		}
 	}
 	
-	public static void validUrl(String url) {
+	public boolean validUrl(String url) {
 		Pattern pattern = Pattern.compile("^((http(s?))\\:\\/\\/?)([0-9a-zA-Z-]+\\.)+[a-zA-Z]{2,6}(\\:[0-9]+)?(\\/\\S*)?");
 		Matcher matcher = pattern.matcher(url);
 		
 		if(!matcher.matches()) {
-			throw new IllegalArgumentException("URL을 확인해 주세요.");
+			logger.error("URL을 확인해 주세요. url :{} ", url);
+			throw new IllegalArgumentException("URL을 확인해 주세요.(http or https)");
 		}
+		
+		return true;
 	}
 	
 	private String scrap(final String url) {
 		try {
 			Document doc = Jsoup.connect(url)
-					.timeout(3000)
+					.timeout(5000)
 					.get();
 			return doc.outerHtml();
 		} catch(IOException e) {
+			logger.error("사이트 연결 실패! url :{}, message : {} ", url, e.getMessage());
 			throw new IllegalStateException("사이트 연결이 불안정합니다.");
 		}
 		

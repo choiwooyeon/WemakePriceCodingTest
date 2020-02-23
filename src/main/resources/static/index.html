@@ -6,11 +6,7 @@
     
     <script type="text/javascript" src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
     <script type="text/javascript">
-	    $("#groupCount").on("keyup", function () {
-	        $(this).val($(this).val().replace(/[^0-9]/gi, ""));
-	    })
-	
-	    function scrap() {
+	    function print() {
 	        let url = $("#url").val();
 	        if (url == '') {
 	            alert('url을 입력해 주세요.');
@@ -20,7 +16,7 @@
 	        let characterType = $("#characterType").val();
 	
 	        let groupCount = $("#groupCount").val();
-	        if (groupCount == '' || groupCount <= 0) {
+	        if (isNaN(groupCount) || groupCount <= 0) {
 	            alert('출력 묶음 단위는 1이상의 자연수를 입력 해 주세요.');
 	            return;
 	        }
@@ -54,17 +50,17 @@
 			<td>TYPE</td>
 			<td>
 				<select id="characterType">
-			        <option value="HTML">HTML</option>
-			        <option value="TEXT">Text</option>
+			        <option value="NOTHTML">HTML태그제외</option>
+			        <option value="TEXT">Text전체</option>
 			    </select>
 			</td>
 		<tr>
 		<tr>
-			<td>출력묶음 단위</td>
+			<td>출력묶음 단위(자연수)</td>
 			<td><input id="groupCount" type="text" value="100"></td>
 		<tr>
 		<tr>
-			<td rowspan=2><button type="button" onclick="scrap();">출력</button></td>
+			<td rowspan=2><button type="button" onclick="print();">출력</button></td>
 		<tr>
 		<tr>
 			<td>몫</td>
