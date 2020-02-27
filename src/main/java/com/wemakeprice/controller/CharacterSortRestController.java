@@ -34,7 +34,6 @@ public class CharacterSortRestController {
 			@RequestParam final BigInteger groupCount) {
 		
 		try {
-			//if(0 >= groupCount) {
 			if(groupCount.compareTo(new BigInteger("0")) < 1) {
 				throw new IllegalArgumentException("출력 단위는 양수를 입력해 주세요.");
 			}
