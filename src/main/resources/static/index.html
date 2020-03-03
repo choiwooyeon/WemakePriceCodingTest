@@ -45,31 +45,31 @@
 		<tr>
 			<td>URL</td>
 			<td><input id="url" type="text" value="http://www.google.co.kr"/></td>
-		<tr>
+		</tr>
 		<tr>
 			<td>TYPE</td>
 			<td>
 				<select id="characterType">
 			        <option value="NOTHTML">HTML태그제외</option>
-			        <option value="TEXT">Text전체</option>
+			        <option value="TEXTALL">Text전체</option>
 			    </select>
 			</td>
-		<tr>
+		</tr>
 		<tr>
 			<td>출력묶음 단위(자연수)</td>
 			<td><input id="groupCount" type="text" value="100"></td>
+		</tr>
 		<tr>
-		<tr>
-			<td rowspan=2><button type="button" onclick="print();">출력</button></td>
-		<tr>
+			<td colspan=2><button type="button" onclick="print();">출력</button></td>
+		</tr>
 		<tr>
 			<td>몫</td>
 			<td><textarea id="quotient" style='width:100%;height:100%'></textarea></td>
-		<tr>
+		</tr>
 		<tr>
 			<td>나머지</td>
 			<td><textarea id="remainder" style='width:100%;height:100%'></textarea></td>
-		<tr>
+		</tr>
 	</table>
 </body>
 </html>

@@ -1,7 +1,13 @@
 package com.wemakeprice.model;
 
+import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
+
+
+import org.springframework.stereotype.Component;
+
+import lombok.Data;
 
 
 /**
@@ -11,50 +17,43 @@ import java.util.stream.Collectors;
  * @since 2020.02.23
  *
  */
+@Data
+@Component
 public class CharacterSort {
-
-	private String number;
+	private final Pattern NumberPattern = Pattern.compile("[0-9]+");
+	private final Pattern AlphabetPattern = Pattern.compile("[a-zA-Z]+");
 	
-	private String alphabet;
+	private String numberCharacter;
+	private String alphabetCharacter;
 	
 	
-	public String getNumber() {
-		return this.number;
+	public void sortCharacter(String character) {
+		numberCharacter = sortNumberCharacter(character);
+		alphabetCharacter = sortgetAlphabetCharacter(character);
 	}
 	
 	
-	public String getAlphabet() {
-		return this.alphabet;
-	}
-	
-	
-	public CharacterSort(String character) {
-	
-		String removeSpaceCharacter = character.replaceAll("\\p{Z}", "");
-		if(removeSpaceCharacter.isEmpty()) {
-			throw new IllegalArgumentException("문자열을 입력해 주세요.");
+	private String convertRegex(Pattern pattern, String character) {
+		Matcher matcher = pattern.matcher(character);
+		StringBuilder builder = new StringBuilder();
+		while(matcher.find()) {
+			builder.append(matcher.group(0));
 		}
-		
-		this.number = sortNumber(removeSpaceCharacter);
-		this.alphabet = sortAlphabet(removeSpaceCharacter);
+		return builder.toString();
 	}
 	
 	
-	private String sortNumber(String removeSpaceCharacter) {
-		String number = removeSpaceCharacter.replaceAll("[^0-9]+", "");
-		
+	private String sortNumberCharacter(String character) {
 		return  Pattern.compile("")
-				.splitAsStream(number)
+				.splitAsStream(convertRegex(NumberPattern, character))
 				.sorted()
 				.collect(Collectors.joining(""));
 	}
 	
 	
-	private String sortAlphabet(String removeSpaceCharacter) {
-		String alphabet = removeSpaceCharacter.replaceAll("[^a-zA-Z]+", "");
-		
+	private String sortgetAlphabetCharacter(String character) {		
 		return Pattern.compile("")
-				.splitAsStream(alphabet)
+				.splitAsStream(convertRegex(AlphabetPattern, character))
 				.sorted()
 				.sorted(String.CASE_INSENSITIVE_ORDER)
 				.collect(Collectors.joining(""));
@@ -67,21 +66,21 @@ public class CharacterSort {
 	
 	
 	private int numberLength() {
-		return this.number.length();
+		return this.numberCharacter.length();
 	}
 	
 	
 	private int alphabetLength() {
-		return this.alphabet.length();
+		return this.alphabetCharacter.length();
 	}
 	
 	
 	public String remainSubstring() {
 		
 		if(this.alphabetLength() > numberLength()) {
-			return this.alphabet.substring(commonLength(), alphabetLength());
+			return this.alphabetCharacter.substring(commonLength(), alphabetLength());
 		}
 		
-		return this.number.substring(commonLength(), numberLength());
+		return this.numberCharacter.substring(commonLength(), numberLength());
 	}
 }

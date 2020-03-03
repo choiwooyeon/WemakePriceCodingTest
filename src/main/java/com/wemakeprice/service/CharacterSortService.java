@@ -1,7 +1,8 @@
 package com.wemakeprice.service;
 
-import java.math.BigInteger;
+import java.io.IOException;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.wemakeprice.model.CharacterSort;
@@ -20,13 +21,22 @@ import com.wemakeprice.model.Scraper;
 @Service
 public class CharacterSortService {
 	
+	@Autowired
+	private Scraper scraper;
+	
+	@Autowired
+	private CharacterSort characterSort;
+	
+	private String scrap(String url, CharacterType type) throws IOException {
+		String character = scraper.scrap(url, type);
+		return character;
+	}
+	
 	public CharacterSortResponseDTO sortAndDevide(final String url, 
 			final CharacterType characterType,
-			final BigInteger groupCount) {
+			final long groupCount) throws IOException {
 		
-		Scraper scraper = new Scraper(url, characterType);
-		CharacterSort characterSort = new CharacterSort(scraper.getCharacter());
-		
+		characterSort.sortCharacter(scrap(url, characterType));
 		String joinCharacter = joinedNumberAndAlphabet(characterSort);
 				
 		return divideAndRemainderText(joinCharacter, groupCount);
@@ -35,23 +45,23 @@ public class CharacterSortService {
 	
 	public String joinedNumberAndAlphabet(CharacterSort characterSort) {
 		
-		StringBuffer stringbuffer = new StringBuffer();
+		StringBuilder builder = new StringBuilder();
 		for(int i = 0, length = characterSort.commonLength(); i < length; i++) {
-			stringbuffer.append(characterSort.getAlphabet().charAt(i));
-			stringbuffer.append(characterSort.getNumber().charAt(i));
+			builder.append(characterSort.getAlphabetCharacter().charAt(i));
+			builder.append(characterSort.getNumberCharacter().charAt(i));
 		}
 		
-		stringbuffer.append(characterSort.remainSubstring());
+		builder.append(characterSort.remainSubstring());
 
-		return stringbuffer.toString();
+		return builder.toString();
 	}
 	
 	
-	public CharacterSortResponseDTO divideAndRemainderText(String text, BigInteger groupCount) {
+	public CharacterSortResponseDTO divideAndRemainderText(String text, long groupCount) {
 		
 		int totalSize = text.length();
-		BigInteger[] value = new BigInteger(""+totalSize).divideAndRemainder(groupCount);
-		int size = totalSize - value[1].intValue();
+		int remainderLength = (int) Math.floorMod(totalSize, groupCount);
+		int size = totalSize - remainderLength;
         return new CharacterSortResponseDTO("정렬을 완료하였습니다.", text.substring(0, size), 
         		text.substring(size, totalSize));
 	}
