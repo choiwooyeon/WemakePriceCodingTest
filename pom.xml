@@ -13,7 +13,7 @@
 	<version>0.0.1-SNAPSHOT</version>
 	<name>codingTest</name>
 	<description>codeTest</description>
-
+	
 	<properties>
 		<java.version>1.8</java.version>
 		<sonar.sources>src/js</sonar.sources>
